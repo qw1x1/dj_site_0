@@ -1,0 +1,22 @@
+{% extends 'shop/base.htm' %}
+
+{% block content %}
+
+<br>
+
+<div class="container   ">
+    <div class="row justify-content-md-center input-group flex-nowrap ">
+
+      <div class="col-md-auto">
+        <h1>{{ title }}</h1>
+        <br>
+
+        <form method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock content %}

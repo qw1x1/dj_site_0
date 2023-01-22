@@ -1,0 +1,105 @@
+{% extends 'shop/base.htm' %} 
+
+{% block content %}
+
+<br>
+<h1>{{title}}</h1>
+<br>
+<div class="row">
+    <div class="col col-10">
+        <h3>Общая стоимость всех товаров: {{ request.session.total_price }} руб</h3>
+    </div>
+    <div class="col col-2">
+        <!-- Button trigger modal -->
+{% if request.session.cart%}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Оформить заказ</button>
+  
+{% if request.user.is_authenticated %}
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Выберите способ оплаты и получения</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Форма ORDER -->
+          <form action="#" method="post">{% csrf_token %}
+
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="inputGroupSelect01">Способ получения</label>
+              <select class="form-select" id="inputGroupSelect01">
+                <option selected>Самовызов</option>
+                <option value="1">Курьером</option>
+              </select>
+            </div>
+
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="inputGroupSelect01">Способ оплаты</label>
+              <select class="form-select" id="inputGroupSelect01">
+                <option selected>При получении</option>
+                <option value="1">С помощю карты</option>
+              </select>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">+375</span>
+              <input type="text" class="form-control" placeholder="Номер телефона с кодом" aria-label="Number_phone" aria-describedby="basic-addon1">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Оплатить: {{request.session.total_price}}, руб</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Авторизуйтесь</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Заказа может оформить только авторизованный пользователь
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <a href="{% url 'login' %}"><button type="button" class="btn btn-primary">Авторизовться</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endif %}
+
+    </div>
+</div>
+
+<br>
+<table class="table table-bordered border-primary">
+    <tbody>
+        <tr>
+            <th>Намиенование</th>
+            <th>Фото</th>
+            <th>Стоимость</th>
+            <th>Действия</th>
+        </tr>
+      {% if request.session.cart %}
+        {% for prod in product_in_cart %}
+                <tr>
+                    <td><a href="{{ prod.get_absolute_url }}">{{ prod }}</a></td>
+                    <td><img src="{{ prod.photo.url }}" class="card-img-top" alt="..." width="100px" height="100px"></td>
+                    <th>{{ prod.price }}</th>
+                    <td>{% include "cart/remove_to_cart_button.htm" with slug=prod.slug %}</td>
+                </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+</table> 
+{% endblock content %}

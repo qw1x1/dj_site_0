@@ -1,0 +1,5 @@
+<form action="{% url 'cart:add' slug=slug %}" method="post">{% csrf_token %}
+    <input type="hidden" name="url_form" value="{{ request.path }}">
+    <button type="submit" class="btn btn-primary">В корзину</button>
+</form>
+
